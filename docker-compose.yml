@@ -1,0 +1,75 @@
+version: "3"
+networks:
+  network:
+    ipam:
+      driver: default
+      config:
+        - subnet: '177.7.0.0/16'
+
+services:
+  web:
+    build:
+      context: ./deploy
+      dockerfile: dockerfile_nginx
+    container_name: mep_server_nginx
+    restart: always
+    ports:
+      - '8081:8081'
+    depends_on:
+      - app
+    command: [ 'nginx-debug', '-g', 'daemon off;' ]
+    networks:
+      network:
+        ipv4_address: 177.7.0.11
+
+  app:
+    build:
+      context: ./deploy
+      dockerfile: dockerfile_app
+    container_name: mep_server_app
+    restart: always
+    command: bash -c "python manage.py makemigrations && python manage.py migrate && supervisord -n -c /etc/supervisor/supervisord.conf"
+    volumes:
+      - .:/opt/project/mep_server
+      - ./deploy/supervisor_conf:/etc/supervisor/conf.d
+      # - /tmp/logs:/opt/project/logs
+    ports:
+      - "9022:22"  # 远程debug
+    depends_on:
+      - db
+      - redis
+    links:
+      - db
+      - redis
+    networks:
+      network:
+        ipv4_address: 177.7.0.12
+
+  db:
+    image: mysql:5.7
+    container_name: mep_server_mysql
+#    volumes:
+#      - /tmp/mysql:/var/lib/mysql
+    ports:
+      - "13306:3306"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=1q2w3e4r99
+      - MYSQL_DATABASE=mep_server
+    command:  [
+      '--character-set-server=utf8mb4',
+      '--collation-server=utf8mb4_unicode_ci'
+    ]
+    networks:
+      network:
+        ipv4_address: 177.7.0.13
+
+  redis:
+    image: redis:6.0.6
+    container_name: mep_server_redis
+    ports:
+      - "16379:6379"
+    restart: always
+    networks:
+      network:
+        ipv4_address: 177.7.0.14

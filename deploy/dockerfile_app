@@ -1,0 +1,38 @@
+# 基础镜像
+FROM python:3.8-slim
+LABEL author="xiaoqiao99"
+# 替换源 pip源　ssh supervisor
+RUN ln -s /usr/local/bin/python /usr/bin/python && \
+    sed -i s/deb.debian.org/mirrors.aliyun.com/g /etc/apt/sources.list && \
+    sed -i s/security.debian.org/mirrors.aliyun.com/g /etc/apt/sources.list && \
+    mkdir -p ~/.pip && \
+    mkdir -p /etc/supervisor/conf.d && \
+    mkdir -p /opt/project/logs && \
+    mkdir -p /opt/project/mep_server && \
+    apt-get update && \
+    apt-get install -y default-libmysqlclient-dev gcc && \
+    apt-get install -y openssh-server openssh-client && \
+    echo root:1q2w3e4r99 | chpasswd && \
+    echo "PermitRootLogin yes" >> /etc/ssh/sshd_config && \
+    mkdir -p /run/sshd && \
+    apt-get clean && \
+    ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
+    echo 'Asia/Shanghai' > /etc/timezone && \
+    echo "[global]" >> ~/.pip/pip.conf && \
+    echo "trusted-host=mirrors.aliyun.com" >> ~/.pip/pip.conf && \
+    echo "index-url=http://mirrors.aliyun.com/pypi/simple/" >> ~/.pip/pip.conf && \
+    pip install supervisor && \
+    /usr/local/bin/echo_supervisord_conf > /etc/supervisor/supervisord.conf && \
+    echo "[include]">>/etc/supervisor/supervisord.conf && \
+    echo "files = /etc/supervisor/conf.d/*.ini">>/etc/supervisor/supervisord.conf
+
+WORKDIR /opt/project/mep_server
+#项目依赖
+COPY requirements.txt /opt/project/mep_server
+RUN pip install -r requirements.txt
+
+#print()时在控制台正常显示中文
+#ENV PYTHONIOENCODING=utf-8
+# 启动
+#EXPOSE 8000 22
+#CMD ["supervisord","-n","-c","/etc/supervisor/supervisord.conf"]
