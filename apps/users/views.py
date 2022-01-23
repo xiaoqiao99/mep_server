@@ -7,12 +7,14 @@
 @Version : V0.0.1
 @license : (C) Copyright 2017-2030, Bito Robotics Co.Ltd.
 """
-from .models import *
-from utils.response import render_to_json
+from apps import BaseController
+from service.user_service import UserService
 
 
-@render_to_json
-def user_set(request):
-    data = User.objects.all()
-    data = [{"id": elem.id, "name": elem.name} for elem in data]
-    return data
+class UserView(BaseController):
+
+    def get(self, request):
+        return self.call_api_json(UserService.get_user_list)
+
+    def post(self, request):
+        pass

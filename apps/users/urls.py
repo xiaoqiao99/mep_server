@@ -9,10 +9,10 @@
 """
 from django.urls import path
 
-from apps.users import views
+from apps.users.views import UserView
 
 app_name = 'users'
 
 urlpatterns = [
-    path('', views.user_set),
+    path('', UserView.as_view()),
 ]
