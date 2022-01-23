@@ -41,7 +41,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    'corsheaders'
+    # 'corsheaders'
 ]
 
 LOCAL_APPS = [
