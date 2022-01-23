@@ -52,8 +52,9 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',
-    'utils.mep_middleware.RequestIDMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 跨域或者用nginx处理
+    'utils.mep_middleware.RequestIDMiddleware',  # 自定义request_id
+    'utils.mep_middleware.CostTimeMiddleware',  # 自定义接口耗时
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -172,8 +173,11 @@ LOGGING = {
     'formatters': {
         # 日志格式
         'standard': {
-            'format': '[%(asctime)s] [%(request_id)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
-                      '[%(levelname)s]- %(message)s',
+            # 'format': '[%(asctime)s] [%(request_id)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
+            #           '[%(levelname)s]- %(message)s',
+            'format': '{"asctime":"%(asctime)s","path":"%(path)s", "request_id":"%(request_id)s","lineno":%(lineno)d,"module":"%(funcName)s","level":"%(levelname)s","msg":"%(message)s"}'
+            # 日志格式
+
         },
         'simple': {  # 简单格式
             'format': '%(levelname)s %(message)s'

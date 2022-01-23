@@ -9,10 +9,15 @@
 """
 from apps.users.models import *
 
+import logging
+
+logger = logging.getLogger('log')
+
 
 class UserService(object):
     @classmethod
     def get_user_list(cls, *args, **kwargs):
         data = User.objects.all()
         data = [{"id": elem.id, "name": elem.name} for elem in data]
+        logger.info('get_user_list')
         return data
