@@ -53,7 +53,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
     # 'corsheaders.middleware.CorsMiddleware',
-    'utils.MepMiddleware.RequestIDMiddleware',
+    'utils.mep_middleware.RequestIDMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -182,7 +182,7 @@ LOGGING = {
     # 过滤
     'filters': {
         'request_id': {
-                '()': 'utils.MepMiddleware.RequestIDFilter'
+                '()': 'utils.mep_middleware.RequestIDFilter'
             },
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
