@@ -41,7 +41,7 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-
+    'corsheaders'
 ]
 
 LOCAL_APPS = [
@@ -52,6 +52,8 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
 MIDDLEWARE = [
+    # 'corsheaders.middleware.CorsMiddleware',
+    'utils.MepMiddleware.RequestIDMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -145,6 +147,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# MEDIA
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = BASE_DIR / 'media'  # 在Windows开发环境下加上.replace("\\", "/")
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -163,17 +172,22 @@ LOGGING = {
     'formatters': {
         # 日志格式
         'standard': {
-            'format': '[%(asctime)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
-                      '[%(levelname)s]- %(message)s'},
+            'format': '[%(asctime)s] [%(request_id)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s] '
+                      '[%(levelname)s]- %(message)s',
+        },
         'simple': {  # 简单格式
             'format': '%(levelname)s %(message)s'
         },
     },
     # 过滤
     'filters': {
+        'request_id': {
+                '()': 'utils.MepMiddleware.RequestIDFilter'
+            },
         'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
-        },
+        }
+
     },
     # 定义具体处理日志的方式
     'handlers': {
@@ -185,6 +199,7 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,  # 文件大小
             'backupCount': 5,  # 备份数
             'formatter': 'standard',  # 输出格式
+            'filters': ['request_id'],
             'encoding': 'utf-8',  # 设置默认编码，否则打印出来汉字乱码
         },
         # 输出错误日志
@@ -195,13 +210,15 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,  # 文件大小
             'backupCount': 5,  # 备份数
             'formatter': 'standard',  # 输出格式
+            'filters': ['request_id'],
             'encoding': 'utf-8',  # 设置默认编码
         },
         # 控制台输出
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'filters': ['require_debug_true'],
+            # 'filters': ['request_id', 'require_debug_true'],
+            'filters': ['request_id'],
             'formatter': 'standard'
         },
         # 输出info日志
@@ -212,6 +229,7 @@ LOGGING = {
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 5,
             'formatter': 'standard',
+            'filters': ['request_id'],
             'encoding': 'utf-8',  # 设置默认编码
         },
     },
