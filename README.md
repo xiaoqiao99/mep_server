@@ -1,8 +1,15 @@
+## 本地开发
+` pip install -r deploy/requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+mysqlclient 不同环境安装指南请看：
+https://pypi.org/project/mysqlclient/
+`
+
 ##项目目录下
 ###1.生成数据表
 ```angular2html
 python3 manage.py makemigrations
 python3 manage.py migrate
+python3 manage.py createsuperuser
 ```
 ###2.collect静态文件
 ```angular2html
@@ -12,13 +19,6 @@ python3 manage.py collectstatic
 ```angular2html
 python3 manage.py compress --force  # 其实不用手动执行，会随着客户端请求响应自动生成到STATIC/CACHE目录下
 ```
-# 本地开发
-`mysqlclient 不同本地环境安装指南请看：
-https://pypi.org/project/mysqlclient/
-mac 编辑环境变量 vi .bash_profile
-DJANGO_SETTINGS_MODULE="config.settings.local"
-source ~/.bash_profile
-`
 
 # 测试websocket (需要先注册登录)
 # 不带认证注掉上边(AuthMiddlewareStack装饰器)测试 启动服务　

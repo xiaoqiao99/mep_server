@@ -30,7 +30,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
+
+THIRD_PARTY_APPS = [
+
+]
+
+LOCAL_APPS = [
+    "apps.users"
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -88,8 +99,10 @@ DATABASES = {
         'NAME': 'mep_server',
         'USER': 'root',
         'PASSWORD': '1q2w3e4r99',
-        'HOST': '177.7.0.13',
-        'PORT': '3306',
+        # 'HOST': '177.7.0.13',
+        # 'PORT': '3306',
+        'HOST': '127.0.0.1',
+        'PORT': '13306',
     }
 }
 
@@ -116,11 +129,13 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
+
+USE_L10N = True
 
 USE_TZ = True
 
