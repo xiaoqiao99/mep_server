@@ -8,7 +8,7 @@
 @license : (C) Copyright 2017-2030, Bito Robotics Co.Ltd.
 """
 from .models import *
-from utils.json_decorator import render_to_json
+from utils.response import render_to_json
 
 
 @render_to_json
