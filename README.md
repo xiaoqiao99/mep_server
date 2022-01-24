@@ -4,6 +4,18 @@ mysqlclient 不同环境安装指南请看：
 https://pypi.org/project/mysqlclient/
 `
 
+
+
+# 远程debug 生产需要关掉
+```angular2html
+docker exec -it mep_server_app bash
+supervisorctl 
+stop uwsgi
+exit
+回到自己pycharm 配置远程解释器 
+启动 8000 端口
+```
+
 ##项目目录下
 ###1.生成数据表
 ```angular2html
@@ -33,23 +45,4 @@ ws.onmessage = function (evt) {
 };
 ```
 
-# 远程debug 生产需要关掉
-```angular2html
-docker exec -it mep_server_app bash
-supervisorctl 
-stop uwsgi
-exit
-回到自己pycharm 配置远程解释器 
-启动 8000 端口
-```
-# 开启 websocket/celery/sshd
-delploy/supervisor_conf 下 
-注释打开就可以了
 
-# 注意事项
-```angular2html
-mysql 密码  docker-compose.yml and  .env
-ssh 密码 Dockerfile 
-redis 可关掉对外端口
-代理邮箱 .env
-```
